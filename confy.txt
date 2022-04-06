@@ -1,0 +1,15 @@
+de  distutils . mando _ configuración de  importación  de configuración
+de  distutils . depurar  importar  DEBUG
+
+
+class  DevelopmentConfig (): # creamos una clase para el desarrollo
+    DEPURAR  =  Verdadero
+    MYSQL_HOST  =  'host local'
+    MYSQL_USER  =  'danna'
+    MYSQL_PASSWORD  =  '1234567'
+    MYSQL_DB  =  'api-frasco'
+
+
+configuración = {
+    'desarrollo' : DevelopmentConfig
+} 

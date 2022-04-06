@@ -1,0 +1,95 @@
+app = Flask(__name__)
+@app.route('/') 
+def index(): 
+    volver "danna"
+if __name__=='__main__':
+    taller1.run()
+
+de  cmath  import  e
+desde  matraz  importar  Flask , jsonify , solicitud
+desde  el frasco_mysqldb  importar  MySQL
+desde  configuración  importar  configuración
+
+
+app  =  Flask ( __name__ ) #Ejecutar archivo principal
+
+conexión  =  MySQL ( app ) #conexión
+
+@ aplicación . route ( '/grupos' ) #preestablecemos la ruta raiz y el método
+def  listar_grupos (): #Función listar
+    prueba :
+        cursor = conexión . conexión _ cursor ()
+        sql = "SELECCIONE codigo, nombre, creditos FROM grupos"
+        cursor _ ejecutar ( sql )
+        datos = cursor . buscar ()
+        
+        #imprimir
+        grupos = []
+        para  fila  en  datos :
+            curso  = { 'codigo' : fila [ 0 ], 'nombre' : fila [ 1 ], 'creditos' : fila [ 2 ]} #Almacenamos los datos
+            grupos _ append ( curso ) #Guardar datos
+
+        return  jsonify ({ 'grupos' : grupos , 'mensaje' : "grupos listados." }) #Consultar
+
+    excepto  Excepción  como  e :
+        volver  jsonify ({ 'mensaje' : "Error" }) #Mensaje error
+
+@ aplicación . ruta ( '/grupos/<codigo>' )
+def  leer_curso ( codigo ):
+    prueba :
+        cursor = conexión . conexión _ cursor ()
+        sql = "SELECT codigo, nombre, creditos FROM grupos WHERE codigo = '{0}'" . formato ( código )
+        cursor _ ejecutar ( sql )
+        datos = cursor . buscar ()
+        si  datos !=  Ninguno :
+            curso  = { 'codigo' : datos [ 0 ], 'nombre' : datos [ 1 ], 'creditos' : datos [ 2 ]}
+            return  jsonify ({ 'curso' : curso , 'mensaje' : "Busqueda Exitosa." })
+        más :
+            return  jsonify ({ 'mensaje' : "Curso no existe." })
+
+    excepto  Excepción  como  e :
+        volver  jsonify ({ 'mensaje' : "Página no encontrada" })
+
+@ aplicación . ruta ( '/grupos' ) #métodos =['POST']
+def  registrar_curso ():
+    prueba :
+        cursor = conexión . conexión _ cursor ()
+        sql = """INSERTAR EN curso (codigo, nombre, creditos)
+         VALORES ('{0}','{1}','{2}')""" .formato ( solicitud .json [ ' codigo' ], solicitud .json [ ' nombre' ] , solicitud .json [ ' creditos ' ])
+        cursor _ ejecutar ( sql )
+        conexión _ conexión _ commit () #Insertar 
+        #imprimir(solicitud.json)
+        volver ({ 'mensaje' : "Curso registrado." })
+    excepto  Excepción  como  e :
+        volver  jsonify ({ 'mensaje' : "Error" })
+
+@ aplicación . ruta ( '/grupos/<codigo>' ) #métodos =['PUT']
+def  modificar_curso ( codigo ):
+    prueba :
+        cursor = conexión . conexión _ cursor ()
+        sql = "ACTUALIZAR curso SET nombre = '{0}', creditos = '{1}' WHERE codigo = '{2}'" . formato ( solicitud . json [ 'nombre' ], solicitud . json [ 'creditos' ], codigo )
+        cursor _ ejecutar ( sql )
+        conexión _ conexión _ commit ()
+        #imprimir(solicitud.json)
+        volver ({ 'mensaje' : "Curso actualizado." })
+    excepto  Excepción  como  e :
+        volver  jsonify ({ 'mensaje' : "Error" })
+
+@ aplicación . ruta ( '/grupos/<codigo>' ) #metodos =['DELETE']
+def  eliminar_curso ( codigo ):
+    prueba :
+        cursor = conexión . conexión _ cursor ()
+        sql = " ELIMINAR DEL curso DONDE codigo = '{0}'" . formato ( código )
+        cursor _ ejecutar ( sql )
+        conexión _ conexión _ commit () 
+        volver ({ 'mensaje' : "Curso eliminado." })
+    excepto  Excepción  como  e :
+        volver  jsonify ({ 'mensaje' : "Error" })       
+
+def  pag_no_encontrada ( error ):
+    return  "<h1>La página no encontrada</h1>" , 404  
+
+if  __name__ == '__main__' : #Se hace la comprobación
+    aplicación _ configuración _ from_object ( config [ 'desarrollo' ])
+    aplicación _ register_error_handler ( 404 , pag_no_encontrada ) #Registramos el manejador de errores
+    aplicación _ run () # DSi es así ejecutamos la app mediante el método run en modo dev
